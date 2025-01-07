@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useProducts } from '@/app/hooks/useProducts'
 import { timeStamp } from 'console'
+import { useNavigate } from 'react-router-dom';
 
 interface Product {
     name: string;
@@ -18,6 +19,7 @@ interface Product {
 export default function ProductsPage() {
     const {loading, getProducts, addProduct} = useProducts()
     const [products, setProducts] = useState<Product[]>([])
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -42,6 +44,7 @@ export default function ProductsPage() {
         // Refresh product list after added
         const updatedProducts = await getProducts();
         setProducts(updatedProducts);
+        navigate('/results-page');
     }
 
     return (

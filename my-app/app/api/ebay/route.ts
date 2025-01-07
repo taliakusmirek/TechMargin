@@ -38,21 +38,23 @@ export async function GET(request: Request) {
         )
     }
     try {
-        const EBAYPrice = await getEBAY(productName)
+        const ebayData = await getEBAY(productName)
         
         // store in price_history DB of supabase
         const supabase = await createClient()
 
         // select lowest price found in eBay results
-        const item = EBAYPrice.findItemsByKeywordsResponse[0].searchResult[0].item
-        const prices = item.prices[0]
+        const items = ebayData?.findItemsByKeywordsResponse?.[0]?.searchResult?.[0]?.item;
+        const firstItem = items[0];
+        const price = firstItem?.sellingStatus?.[0]?.currentPrice?.[0]?.__value__;
+
 
         // post to supabase with lowest price from eBAY API call that was found
         const { data, error } = await supabase
         .from('price_history')
         .insert([{
             product_id: searchParams.get('product_id'),
-            price: prices[0].price,
+            price: parseFloat(price),
             price_source: 'ebay',
         }])
     

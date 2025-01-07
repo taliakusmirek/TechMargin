@@ -13,11 +13,4 @@ export default function EbayPricesPage() {
             console.error('Error tracking price:', err)
         }
     }
-
-    return (
-        <div>
-
-        </div>
-    )
-
 }
